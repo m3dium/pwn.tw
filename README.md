@@ -35,3 +35,23 @@ Bảng các thanh ghi:
 
 ![image](https://user-images.githubusercontent.com/72652376/182278251-1dd078f4-9110-452f-9718-abca6829d4fb.png)
 
+Ngắt 0x80 đầu tiên, al =4 (eax = 4) chương trình gọi lệnh sys_write() để print vào stdout (ebx = 1) 20 kí tự (edx = 0x14) tại địa chỉ esp (ecx = esp) (tương ứng với hình bên dưới), mục đích là in dòng ‘Let’s start the CTF:’ ra màn hình
+
+![image](https://user-images.githubusercontent.com/72652376/182280055-340f9987-d7b6-4751-a850-02c29f017eea.png)
+
+
+![image](https://user-images.githubusercontent.com/72652376/182280283-0d5011ec-3e1e-4978-950c-5cec95dcc04b.png)
+
+Ngắt 0x80 thứ hai, al=3 (eax = 3) chương trình gọi lệnh sys_read() đọc tối đa 60 kí tự (edx = 0x3c) từ stdin (ebx = 0), lưu vào stack tại vị trí esp (ecx = esp).
+
+Tăng giá trị esp lên 20 (0x14) và return
+
+Chương trình cho đọc vào đến 60 kí tự vào stack, trong khi sau đó chỉ tăng esp lên 20 và return. Ở đây chúng ta có thể Buffer Overflow xảy ra
+
+Cơ bản của việc khai thác BO thành công là:
+
+1. Shell code hợp lý với input vào
+
+2. Khi có shell code phù hợp thì có thể điều khiển return address trỏ về đúng shellcode của ta.
+
+Vào bài toán trên
