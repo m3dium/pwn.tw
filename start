@@ -54,4 +54,18 @@ Cơ bản của việc khai thác BO thành công là:
 
 2. Khi có shell code phù hợp thì có thể điều khiển return address trỏ về đúng shellcode của ta.
 
-Vào bài toán trên
+Vào bài toán trên nếu ta điều khiển return address để chương trình return về 0x08048087 bằng cách gửi payload = ‘a’*0x14 + ‘\x87\x80\x04\x08’, 
+chương trình sau khi return về sẽ thực hiện sys_write() thêm lần nữa, in ra 20 bytes trên stack. 
+
+Vì 4 bytes đầu tiên trên stack lúc này chính là esp nên coi như ta đã leak được địa chỉ esp. Chương trình sẽ tiếp tục với một lệnh sys_read() nữa, ta sẽ gửi payload thứ hai: 
+
+payload = ‘a’*0x14 + (esp+20) + shellcode
+
+lúc này chương trình sẽ return về đúng shellcode mà ta cần.
+
+![image](https://user-images.githubusercontent.com/72652376/182299839-369d0de7-931a-4cff-8c61-3fb74df6db2b.png)
+
+
+![image](https://user-images.githubusercontent.com/72652376/182299808-5607507e-d5ef-4cfe-8e39-f4a49f03dd6e.png)
+
+Sau đó có được flag
